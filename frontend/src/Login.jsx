@@ -22,9 +22,14 @@ function Login() {
 
       console.log(res);
 
-      if (res === "login success") {
-        alert("Login success");
-        navigate("/");
+      if (res && res.username) {
+        alert("Login success! Welcome " + res.role);
+        localStorage.setItem("user", JSON.stringify(res));
+        if (res.role === "ADMIN") {
+          window.location.href = "/admin";
+        } else {
+          window.location.href = "/";
+        }
       } else {
         alert("Invalid credentials");
       }

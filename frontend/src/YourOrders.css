@@ -1,84 +1,180 @@
-/* Page background */
 .orders-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #173a7a, #1f4fa3); /* dark blue gradient */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
+  padding: 80px 20px 40px;
+  background: #0f0f0f1c;
+  color: white;
+  border-radius: 40px;
 }
 
-
-/* Main container */
 .orders-container {
-  width: 100%;
-  max-width: 750px;
-  background: rgba(230, 240, 255, 0.6); /* soft blue glass */
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  border-radius: 18px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  max-width: 1000px;
+  margin: 0 auto ;
+  margin-top: 100px;
 }
 
-/* Title */
 .orders-container h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* ===== Order Card ===== */
+.order-count {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 30px;
+}
+
+.orders-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
 .order-card {
-  background: rgba(230, 240, 255, 0.5); /* matching glass blue */
-  backdrop-filter: blur(8px);
-  padding: 22px;
-  border-radius: 14px;
-  margin-bottom: 18px;
-
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
-
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.3);
 }
-/* Glass Hover Effect */
+
 .order-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-  background: rgba(230, 240, 255, 0.75);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 198, 255, 0.3);
 }
 
-/* Image */
-.order-image {
+.order-card.cancelled {
+  opacity: 0.7;
+  border-color: rgba(255, 71, 71, 0.2);
+}
+
+.order-image-container {
   width: 120px;
   height: 120px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 25px;
+  background: white;
+}
+
+.order-image {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  display: block;
-  margin: 0 auto 15px;
-  transition: transform 0.3s ease;
 }
 
-.order-card:hover .order-image {
-  transform: scale(1.05);
+.order-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* Text */
-.order-card h4 {
-  text-align: center;
-  color: #222;
-  margin-bottom: 8px;
+.order-details h4 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #fff;
 }
 
-.order-card p {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
+.order-meta {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
 }
 
-/* No orders text */
+.order-meta p span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-badge.ordered {
+  background: rgba(0, 198, 255, 0.1);
+  color: #00c6ff;
+  border: 1px solid rgba(0, 198, 255, 0.3);
+}
+
+.status-badge.cancelled {
+  background: rgba(255, 71, 71, 0.1);
+  color: #ff4747;
+  border: 1px solid rgba(255, 71, 71, 0.3);
+}
+
+.cancellation-info {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 71, 71, 0.05);
+  border-left: 3px solid #ff4747;
+  border-radius: 0 5px 5px 0;
+}
+
+.reason-label {
+  font-size: 0.8rem;
+  color: #ff4747;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.reason-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}
+
+.btn-cancel-order {
+  align-self: flex-start;
+  background: transparent;
+  color: #ff4747;
+  border: 1px solid #ff4747;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel-order:hover {
+  background: #ff4747;
+  color: white;
+}
+
 .no-orders {
   text-align: center;
-  color: #555;
-  font-size: 18px;
+  padding: 50px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.2rem;
 }
 
+@media (max-width: 600px) {
+  .order-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .order-image-container {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .order-meta {
+    justify-content: center;
+  }
+
+  .btn-cancel-order {
+    align-self: center;
+  }
+}

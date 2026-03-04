@@ -12,23 +12,30 @@ function OrderPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      alert("Please login to place an order!");
+      navigate("/login");
+      return;
+    }
+
     if (!product) {
       alert("No product selected!");
       return;
     }
 
-    const userId = 1; // Replace with logged-in user id if available
+    const userId = user.id;
 
     const orderRequest = {
       userId: userId,
       productId: product.id,
       quantity: quantity,
       productName: product.title,
-      productImage: product.image 
+      productImage: product.image
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/orders/buyNow", {
+      const response = await fetch("http://localhost:8081/api/orders/buyNow", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderRequest)

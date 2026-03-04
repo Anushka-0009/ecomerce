@@ -1,10 +1,8 @@
 package com.ty.ecommerce.controller;
 
-
 import com.ty.ecommerce.dto.LoginRequest;
 import com.ty.ecommerce.dto.RegisterRequest;
 import com.ty.ecommerce.dto.UserResponse;
-// import com.ty.ecommerce.entity.User;
 import com.ty.ecommerce.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +17,23 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/{id}")
+    public UserResponse getUserById(@PathVariable int id) {
+        return userService.getUserById(id);
+    }
+
     @PostMapping("/register")
-    public UserResponse register(@RequestBody RegisterRequest request){
+    public UserResponse register(@RequestBody RegisterRequest request) {
         return userService.register(request);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request){
-        boolean success= userService.login(request);
+    public UserResponse login(@RequestBody LoginRequest request) {
+        return userService.login(request);
+    }
 
-       return success?"login success":"login failed";
+    @PutMapping("/{id}")
+    public UserResponse updateProfile(@PathVariable int id, @RequestBody com.ty.ecommerce.entity.User user) {
+        return userService.updateProfile(id, user);
     }
 }

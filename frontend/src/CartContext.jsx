@@ -14,7 +14,7 @@ export const CartProvider = ({ children }) => {
 
   const loadCart = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/cart");
+      const response = await axios.get("http://localhost:8081/cart");
       setCartItems(response.data);
     } catch (error) {
       console.log("Error loading cart:", error);
@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
         image: product.image
       };
 
-      await axios.post("http://localhost:8080/cart", newProduct);
+      await axios.post("http://localhost:8081/cart", newProduct);
 
       loadCart(); // refresh cart
 
@@ -44,7 +44,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (id) => {
     try {
 
-      await axios.delete(`http://localhost:8080/cart/${id}`);
+      await axios.delete(`http://localhost:8081/cart/${id}`);
 
       loadCart();
 

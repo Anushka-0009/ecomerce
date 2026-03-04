@@ -3,18 +3,20 @@ package com.ty.ecommerce.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "purchase_orders")
 public class Orders {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name = "prod_id")
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     private int quantity;
 
@@ -27,6 +29,8 @@ public class Orders {
 
     private String productImage;
 
+    private String cancellationReason;
+
     // ===== GETTERS & SETTERS =====
 
     public Long getId() {
@@ -37,20 +41,20 @@ public class Orders {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getQuantity() {
@@ -91,5 +95,13 @@ public class Orders {
 
     public void setProductImage(String productImage) {
         this.productImage = productImage;
+    }
+
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
     }
 }

@@ -2,7 +2,6 @@ package com.ty.ecommerce.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ty.ecommerce.entity.Cart;
@@ -11,8 +10,11 @@ import com.ty.ecommerce.repository.CartRepository;
 @Service
 public class CartService {
 
-    @Autowired
-    private CartRepository cartRepository;
+    private final CartRepository cartRepository;
+
+    public CartService(CartRepository cartRepository) {
+        this.cartRepository = cartRepository;
+    }
 
     // Add product to cart
     public Cart addToCart(Cart cart) {

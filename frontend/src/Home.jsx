@@ -40,16 +40,16 @@ function Home() {
     category: p.category,
     source
   })
-  
+
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const dummyRes = await axios.get("https://dummyjson.com/products")
-        const fakeRes = await axios.get("https://fakestoreapi.com/products")
-        const dummyProducts = dummyRes.data.products.map(p => normalizeProduct(p, "dummy"))
-        const fakeProducts = fakeRes.data.map(p => normalizeProduct(p, "fake"))
-        const allProducts = [...dummyProducts, ...fakeProducts]
+        const localRes = await axios.get("http://localhost:8081/api/products")
+        const allProducts = localRes.data.map(p => ({
+          ...p,
+          source: "local"
+        }))
         setData(allProducts)
         setFilteredData(allProducts)
       } catch (err) {
@@ -73,20 +73,20 @@ function Home() {
 
 
   // ✅ Get padding based on screen size + search state
- const getPaddingTop = () => {
-  const w = window.innerWidth
-  
-  // 📱 MOBILE — screens smaller than 768px
-  if (w <= 767) return searchText ? "150px" : "30px"
-  
-  // 📲 TABLET — screens between 768px and 1024px
-  if (w <= 1023) return searchText ? "140px" : "40px"
+  const getPaddingTop = () => {
+    const w = window.innerWidth
 
-  // 🖥️ DESKTOP — screens larger than 1024px
-  return searchText ? "70px" : "30px"
-}
+    // 📱 MOBILE — screens smaller than 768px
+    if (w <= 767) return searchText ? "150px" : "30px"
 
-    return (
+    // 📲 TABLET — screens between 768px and 1024px
+    if (w <= 1023) return searchText ? "140px" : "40px"
+
+    // 🖥️ DESKTOP — screens larger than 1024px
+    return searchText ? "70px" : "30px"
+  }
+
+  return (
     <div
       className={`page-container hover-target ${searchText ? "search-active" : ""}`}
     >

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/api/users";
+const BASE_URL = "http://localhost:8081/api/users";
 
 // REGISTER
 export const registerUser = async (data) => {

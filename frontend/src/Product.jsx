@@ -117,6 +117,7 @@ function Product() {
     let url = ''
     if (source === 'dummy') url = `https://dummyjson.com/products/${id}`
     else if (source === 'fake') url = `https://fakestoreapi.com/products/${id}`
+    else if (source === 'local') url = `http://localhost:8081/api/products/${id}`
     else { setLoading(false); return }
 
     axios.get(url)
@@ -167,7 +168,6 @@ function Product() {
               )}
             </div>
 
-            {/* ⭐ MULTI IMAGE SELECTOR */}
             {product.images?.length > 1 && (
               <div className="image-selector">
                 {product.images.map((img, index) => (
@@ -202,7 +202,7 @@ function Product() {
             <YourRating />
 
             <div className="btn-box">
-              <QuantitySelector quantity={quantity} setQuantity={setQuantity} maxStock={product.stock} />
+              {/* <QuantitySelector quantity={quantity} setQuantity={setQuantity} maxStock={product.stock} /> */}
               <BuynowBtn product={product} quantity={quantity} />
               <div onClick={handleAddToCart}>
                 <StatusButton product={product} quantity={quantity} />

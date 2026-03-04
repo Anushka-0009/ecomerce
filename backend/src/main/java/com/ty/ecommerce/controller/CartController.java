@@ -2,7 +2,6 @@ package com.ty.ecommerce.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.ty.ecommerce.entity.Cart;
@@ -13,8 +12,11 @@ import com.ty.ecommerce.service.CartService;
 @RequestMapping("/cart")
 public class CartController {
 
-    @Autowired
-    private CartService cartService;
+    private final CartService cartService;
+
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
+    }
 
     // Add to cart
     @PostMapping

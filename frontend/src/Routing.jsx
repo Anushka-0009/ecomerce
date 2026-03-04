@@ -8,6 +8,8 @@ import Register from './Register'
 import OrderPage from "./OrderPage";
 import YourOrdersPage from './YourOrdersPage';
 import MyCart from "./MyCart";
+import AdminDashboard from './AdminDashboard';
+import Profile from './Profile';
 
 function Routing() {
   return (
@@ -20,6 +22,8 @@ function Routing() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/your-orders" element={<YourOrdersPage />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   )
 }
