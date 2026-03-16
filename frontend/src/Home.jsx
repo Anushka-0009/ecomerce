@@ -15,10 +15,12 @@ import Navbar from './Navbar.jsx'
 import InsaneFluidCursor from "./InsaneFluidCursor.jsx";
 
 function Home() {
+
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const [searchText, setSearchText] = useState("")
 
+  const API_URL = "https://ecomerce-production-b944.up.railway.app/api/products"
 
   const slides = [
     { id: 1, src: img1 },
@@ -41,27 +43,33 @@ function Home() {
     source
   })
 
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const localRes = await axios.get("http://localhost:8081/api/products")
+
+        const localRes = await axios.get(API_URL)
+
         const allProducts = localRes.data.map(p => ({
           ...p,
           source: "local"
         }))
+
         setData(allProducts)
         setFilteredData(allProducts)
+
       } catch (err) {
         console.log(err)
       }
     }
+
     fetchProducts()
+
   }, [])
 
 
-  // ✅ Search function
+  // Search function
   const handleSearch = (text) => {
+
     setSearchText(text)
 
     const filtered = data.filter(item =>
@@ -69,29 +77,31 @@ function Home() {
     )
 
     setFilteredData(filtered)
+
   }
 
 
-  // ✅ Get padding based on screen size + search state
+  // Responsive padding
   const getPaddingTop = () => {
+
     const w = window.innerWidth
 
-    // 📱 MOBILE — screens smaller than 768px
     if (w <= 767) return searchText ? "150px" : "30px"
 
-    // 📲 TABLET — screens between 768px and 1024px
     if (w <= 1023) return searchText ? "140px" : "40px"
 
-    // 🖥️ DESKTOP — screens larger than 1024px
     return searchText ? "70px" : "30px"
+
   }
 
   return (
-    <div
-      className={`page-container hover-target ${searchText ? "search-active" : ""}`}
-    >
+
+    <div className={`page-container hover-target ${searchText ? "search-active" : ""}`}>
+
       <InsaneFluidCursor />
+
       <Navbar onSearch={handleSearch} />
+
       <br />
 
       {searchText.trim() === "" && (
@@ -101,27 +111,44 @@ function Home() {
       <div className={`product-grid ${searchText ? "search-mode" : ""}`}>
 
         {filteredData.length === 0 ? (
+
           <p className="no-products">No Products Found</p>
+
         ) : (
+
           filteredData.map(item => (
+
             <div className="product-card" key={`${item.source}-${item.id}`}>
+
               <Link to={`/product/${item.source}/${item.id}`}>
+
                 <img
                   src={item.image}
                   alt={item.title}
                   loading="lazy"
                   onError={(e) => e.target.src = "/no-image.png"}
                 />
+
                 <p><b>{item.title}</b></p>
+
                 <p>Price: ${item.price}</p>
-                <p className="product-card-description">{item.description}</p>
+
+                <p className="product-card-description">
+                  {item.description}
+                </p>
+
               </Link>
+
             </div>
+
           ))
+
         )}
 
       </div>
+
     </div>
+
   )
 
 }

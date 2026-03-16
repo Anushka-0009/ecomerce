@@ -7,6 +7,8 @@ export const CartProvider = ({ children }) => {
 
   const [cartItems, setCartItems] = useState([]);
 
+  const API_BASE_URL = "https://ecomerce-production-b944.up.railway.app/cart";
+
   // Load cart from backend
   useEffect(() => {
     loadCart();
@@ -14,7 +16,7 @@ export const CartProvider = ({ children }) => {
 
   const loadCart = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/cart");
+      const response = await axios.get(API_BASE_URL);
       setCartItems(response.data);
     } catch (error) {
       console.log("Error loading cart:", error);
@@ -31,7 +33,7 @@ export const CartProvider = ({ children }) => {
         image: product.image
       };
 
-      await axios.post("http://localhost:8081/cart", newProduct);
+      await axios.post(API_BASE_URL, newProduct);
 
       loadCart(); // refresh cart
 
@@ -44,7 +46,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (id) => {
     try {
 
-      await axios.delete(`http://localhost:8081/cart/${id}`);
+      await axios.delete(`${API_BASE_URL}/${id}`);
 
       loadCart();
 

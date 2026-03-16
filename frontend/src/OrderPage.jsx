@@ -3,16 +3,20 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "./OrderPage.css";
 
 function OrderPage() {
+
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [quantity, setQuantity] = useState(1); // Add quantity input
+  const [quantity, setQuantity] = useState(1);
+
   const navigate = useNavigate();
   const location = useLocation();
   const product = location.state?.product;
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     const user = JSON.parse(localStorage.getItem("user"));
+
     if (!user) {
       alert("Please login to place an order!");
       navigate("/login");
@@ -35,11 +39,15 @@ function OrderPage() {
     };
 
     try {
-      const response = await fetch("http://localhost:8081/api/orders/buyNow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderRequest)
-      });
+
+      const response = await fetch(
+        "https://ecomerce-production-b944.up.railway.app/api/orders/buyNow",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderRequest)
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to place order");
 
@@ -50,27 +58,43 @@ function OrderPage() {
       navigate("/your-orders");
 
     } catch (err) {
+
       console.error(err);
       alert("Error placing order. Check console.");
+
     }
+
   };
 
   return (
+
     <div className="page-wrapper">
+
       <div className="order-container">
+
         <h2>Order Details</h2>
 
         {product && (
           <div style={{ textAlign: "center", marginBottom: "20px" }}>
-            <img src={product.image} alt={product.title} style={{ width: "150px" }} />
+
+            <img
+              src={product.image}
+              alt={product.title}
+              style={{ width: "150px" }}
+            />
+
             <h4>{product.title}</h4>
+
             <p>Price: ₹{product.price}</p>
+
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="order-form">
+
           <div className="form-group">
             <label>Quantity</label>
+
             <input
               type="number"
               value={quantity}
@@ -78,6 +102,7 @@ function OrderPage() {
               onChange={(e) => setQuantity(parseInt(e.target.value))}
               required
             />
+
           </div>
 
           <div className="form-group">
@@ -96,9 +121,13 @@ function OrderPage() {
           </div>
 
           <div className="payment-section">
+
             <h3>Payment Method</h3>
+
             {["Cash on Delivery", "UPI", "Card"].map((method) => (
+
               <label key={method}>
+
                 <input
                   type="radio"
                   name="payment"
@@ -106,18 +135,27 @@ function OrderPage() {
                   onChange={(e) => setPaymentMethod(e.target.value)}
                   required
                 />
+
                 {method}
+
               </label>
+
             ))}
+
           </div>
 
           <button className="place-order-btn" type="submit">
             Place Order
           </button>
+
         </form>
+
       </div>
+
     </div>
+
   );
+
 }
 
 export default OrderPage;

@@ -3,7 +3,7 @@ import axios from 'axios';
 import './AdminDashboard.css';
 import { useNavigate, Link } from 'react-router-dom';
 
-const API_BASE_URL = "http://localhost:8081/api/products";
+const API_BASE_URL = "https://ecomerce-production-b944.up.railway.app/api/products";
 
 function AdminDashboard() {
     const [products, setProducts] = useState([]);
@@ -98,11 +98,30 @@ function AdminDashboard() {
                 <span className="breadcrumb-separator">&gt;</span>
                 <span className="breadcrumb-current">Admin Dashboard</span>
             </div>
+
             <div className="admin-header">
                 <h2 style={{ color: "#ffffff" }}>Admin Dashboard</h2>
+
                 <div className="admin-actions">
-                    <button className="btn-import" onClick={handleImport}>Import External Products</button>
-                    <button className="btn-add" onClick={() => { setEditingProduct(null); setFormData({ title: '', description: '', price: '', image: '', category: '', brand: '' }); setShowModal(true); }}>
+                    <button className="btn-import" onClick={handleImport}>
+                        Import External Products
+                    </button>
+
+                    <button
+                        className="btn-add"
+                        onClick={() => {
+                            setEditingProduct(null);
+                            setFormData({
+                                title: '',
+                                description: '',
+                                price: '',
+                                image: '',
+                                category: '',
+                                brand: ''
+                            });
+                            setShowModal(true);
+                        }}
+                    >
                         + Add New Product
                     </button>
                 </div>
@@ -118,16 +137,32 @@ function AdminDashboard() {
                         <th>Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     {products.map(product => (
                         <tr key={product.id}>
-                            <td><img src={product.image} alt={product.title} /></td>
+                            <td>
+                                <img src={product.image} alt={product.title} />
+                            </td>
+
                             <td>{product.title}</td>
                             <td>{product.category}</td>
                             <td>${product.price}</td>
+
                             <td>
-                                <button className="btn-edit" onClick={() => handleEdit(product)}>Edit</button>
-                                <button className="btn-delete" onClick={() => handleDelete(product.id)}>Delete</button>
+                                <button
+                                    className="btn-edit"
+                                    onClick={() => handleEdit(product)}
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    className="btn-delete"
+                                    onClick={() => handleDelete(product.id)}
+                                >
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}
@@ -137,19 +172,79 @@ function AdminDashboard() {
             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h3>{editingProduct ? "Edit Product" : "Add Product"}</h3>
+
+                        <h3>
+                            {editingProduct ? "Edit Product" : "Add Product"}
+                        </h3>
+
                         <form onSubmit={handleSubmit}>
-                            <input name="title" placeholder="Title" value={formData.title} onChange={handleChange} required />
-                            <textarea name="description" placeholder="Description" value={formData.description} onChange={handleChange} required />
-                            <input name="price" type="number" step="0.01" placeholder="Price" value={formData.price} onChange={handleChange} required />
-                            <input name="image" placeholder="Image URL" value={formData.image} onChange={handleChange} />
-                            <input name="category" placeholder="Category" value={formData.category} onChange={handleChange} />
-                            <input name="brand" placeholder="Brand" value={formData.brand} onChange={handleChange} />
+                            <input
+                                name="title"
+                                placeholder="Title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                required
+                            />
+
+                            <textarea
+                                name="description"
+                                placeholder="Description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                required
+                            />
+
+                            <input
+                                name="price"
+                                type="number"
+                                step="0.01"
+                                placeholder="Price"
+                                value={formData.price}
+                                onChange={handleChange}
+                                required
+                            />
+
+                            <input
+                                name="image"
+                                placeholder="Image URL"
+                                value={formData.image}
+                                onChange={handleChange}
+                            />
+
+                            <input
+                                name="category"
+                                placeholder="Category"
+                                value={formData.category}
+                                onChange={handleChange}
+                            />
+
+                            <input
+                                name="brand"
+                                placeholder="Brand"
+                                value={formData.brand}
+                                onChange={handleChange}
+                            />
+
                             <div className="modal-actions">
-                                <button type="button" className="btn-cancel" onClick={() => setShowModal(false)}>Cancel</button>
-                                <button type="submit" className="btn-save">Save</button>
+
+                                <button
+                                    type="button"
+                                    className="btn-cancel"
+                                    onClick={() => setShowModal(false)}
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    className="btn-save"
+                                >
+                                    Save
+                                </button>
+
                             </div>
                         </form>
+
                     </div>
                 </div>
             )}

@@ -24,16 +24,19 @@ function getLabelText(value) {
 }
 
 function YourRating() {
+
   const [value, setValue] = useState(null)
   const [hover, setHover] = useState(-1)
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px', mt: '6px' }}>
+
       <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)' }}>
         Your Rating
       </Typography>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+
         <Rating
           name="user-rating"
           value={value}
@@ -54,16 +57,22 @@ function YourRating() {
             {labels[hover !== -1 ? hover : value]}
           </Typography>
         )}
+
       </Box>
+
     </Box>
   )
 }
 
 function QuantitySelector({ quantity, setQuantity, maxStock }) {
+
   return (
     <div className="quantity-selector">
+
       <button className="qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))}>−</button>
+
       <span className="qty-value">{quantity}</span>
+
       <button
         className="qty-btn"
         onClick={() =>
@@ -71,9 +80,13 @@ function QuantitySelector({ quantity, setQuantity, maxStock }) {
             maxStock !== 'N/A' ? Math.min(maxStock, q + 1) : q + 1
           )
         }
-      >+</button>
+      >
+        +
+      </button>
+
     </div>
   )
+
 }
 
 function Product() {
@@ -110,67 +123,89 @@ function Product() {
   }
 
   useEffect(() => {
+
     setLoading(true)
     setImgError(false)
     setQuantity(1)
 
     let url = ''
+
     if (source === 'dummy') url = `https://dummyjson.com/products/${id}`
     else if (source === 'fake') url = `https://fakestoreapi.com/products/${id}`
-    else if (source === 'local') url = `http://localhost:8081/api/products/${id}`
+    else if (source === 'local') url = `https://ecomerce-production-b944.up.railway.app/api/products/${id}`
     else { setLoading(false); return }
 
     axios.get(url)
       .then((res) => {
+
         const normalized = normalizeProduct(res.data, source)
+
         setProduct(normalized)
         setSelectedImg(normalized.images[0])
         setLoading(false)
+
       })
       .catch((err) => {
         console.error(err)
         setLoading(false)
       })
+
   }, [id, source])
 
   const handleShare = () => {
+
     navigator.clipboard.writeText(window.location.href)
+
     setCopied(true)
+
     setTimeout(() => setCopied(false), 2000)
+
   }
 
   if (loading) return <div>Loading...</div>
   if (!product) return <div>No product found</div>
 
   return (
+
     <div className="product-page">
+
       <InsaneFluidCursor />
       <Navbar />
 
       <div className="product-wrapper">
+
         <div className="product-content">
 
           <div className="product-left-col">
 
             <div className="product-image-card">
+
               {!imgError ? (
+
                 <img
                   src={selectedImg}
                   alt={product.title}
                   className="product-image"
                   onError={() => setImgError(true)}
                 />
+
               ) : (
+
                 <div className="product-image-fallback">
                   <span style={{ fontSize: '3rem' }}>🛍️</span>
                   <p>No Image</p>
                 </div>
+
               )}
+
             </div>
 
             {product.images?.length > 1 && (
+
               <div className="image-selector">
+
                 {product.images.map((img, index) => (
+
                   <button
                     key={index}
                     className={`image-thumb-btn ${selectedImg === img ? 'active' : ''}`}
@@ -178,43 +213,60 @@ function Product() {
                   >
                     <img src={img} alt={`thumb-${index}`} />
                   </button>
+
                 ))}
+
               </div>
+
             )}
 
             <div className="product-actions-row">
-              <button className={`action-btn ${wishlisted ? 'wishlisted' : ''}`} onClick={() => setWishlisted(w => !w)}>
+
+              <button
+                className={`action-btn ${wishlisted ? 'wishlisted' : ''}`}
+                onClick={() => setWishlisted(w => !w)}
+              >
                 {wishlisted ? '❤️' : '🤍'}
               </button>
 
               <button className="action-btn" onClick={handleShare}>
                 {copied ? '✅ Copied!' : '🔗 Share'}
               </button>
+
             </div>
 
           </div>
 
           <div className="product-box">
+
             <h2>{product.title}</h2>
+
             <p>{product.description}</p>
+
             <p>Price: ${product.price}</p>
 
             <YourRating />
 
             <div className="btn-box">
-              {/* <QuantitySelector quantity={quantity} setQuantity={setQuantity} maxStock={product.stock} /> */}
+
               <BuynowBtn product={product} quantity={quantity} />
+
               <div onClick={handleAddToCart}>
                 <StatusButton product={product} quantity={quantity} />
               </div>
+
             </div>
 
           </div>
 
         </div>
+
       </div>
+
     </div>
+
   )
+
 }
 
 export default Product
