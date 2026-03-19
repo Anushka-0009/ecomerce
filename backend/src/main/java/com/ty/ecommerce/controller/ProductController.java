@@ -20,7 +20,8 @@ public class ProductController {
         this.externalProductService = externalProductService;
     }
 
-    @PostMapping("/import")
+    // ✅ CHANGED HERE (POST → GET)
+    @GetMapping("/import")
     public List<Product> importProducts() {
         return externalProductService.importProducts();
     }
