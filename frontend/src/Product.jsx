@@ -24,31 +24,26 @@ function getLabelText(value) {
 }
 
 function YourRating() {
-
   const [value, setValue] = useState(null)
   const [hover, setHover] = useState(-1)
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px', mt: '6px' }}>
-
       <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)' }}>
         Your Rating
       </Typography>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-
         <Rating
-          name="user-rating"
           value={value}
           precision={0.5}
           getLabelText={getLabelText}
           onChange={(_, newValue) => setValue(newValue)}
           onChangeActive={(_, newHover) => setHover(newHover)}
-          emptyIcon={<StarIcon style={{ opacity: 0.35, color: '#fff' }} fontSize="inherit" />}
+          emptyIcon={<StarIcon style={{ opacity: 0.35, color: '#fff' }} />}
           sx={{
             fontSize: '1.6rem',
             '& .MuiRating-iconFilled': { color: '#ffd055' },
-            '& .MuiRating-iconHover': { color: '#ffe585' },
           }}
         />
 
@@ -57,51 +52,22 @@ function YourRating() {
             {labels[hover !== -1 ? hover : value]}
           </Typography>
         )}
-
       </Box>
-
     </Box>
   )
 }
 
-function QuantitySelector({ quantity, setQuantity, maxStock }) {
-
-  return (
-    <div className="quantity-selector">
-
-      <button className="qty-btn" onClick={() => setQuantity(q => Math.max(1, q - 1))}>−</button>
-
-      <span className="qty-value">{quantity}</span>
-
-      <button
-        className="qty-btn"
-        onClick={() =>
-          setQuantity(q =>
-            maxStock !== 'N/A' ? Math.min(maxStock, q + 1) : q + 1
-          )
-        }
-      >
-        +
-      </button>
-
-    </div>
-  )
-
-}
-
 function Product() {
 
-  const { id, source } = useParams()
+  // ✅ FIXED ORDER
+  const { source, id } = useParams()
+
   const navigate = useNavigate()
   const { addToCart } = useContext(CartContext)
 
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [imgError, setImgError] = useState(false)
   const [selectedImg, setSelectedImg] = useState(null)
-  const [wishlisted, setWishlisted] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const [quantity, setQuantity] = useState(1)
 
   const normalizeProduct = (p, src) => ({
     id: p.id,
@@ -112,161 +78,79 @@ function Product() {
     images: p.images || [p.thumbnail || p.image],
     rating: src === 'fake' ? p.rating?.rate : p.rating,
     stock: p.stock ?? 'N/A',
-    brand: p.brand ?? 'N/A',
-    category: p.category,
   })
-
-  const handleAddToCart = () => {
-    if (!product) return
-    addToCart(product)
-    alert(`${product.title} added to cart ✅`)
-  }
 
   useEffect(() => {
 
     setLoading(true)
-    setImgError(false)
-    setQuantity(1)
 
     let url = ''
 
-    if (source === 'dummy') url = `https://dummyjson.com/products/${id}`
-    else if (source === 'fake') url = `https://fakestoreapi.com/products/${id}`
-    else if (source === 'local') url = `https://ecomerce-production-b944.up.railway.app/api/products/${id}`
-    else { setLoading(false); return }
+    if (source === 'dummy') {
+      url = `https://dummyjson.com/products/${id}`
+    } 
+    else if (source === 'fake') {
+      url = `https://fakestoreapi.com/products/${id}`
+    } 
+    else {
+      // ✅ DEFAULT = YOUR RAILWAY BACKEND
+      url = `https://ecomerce-production-b944.up.railway.app/api/products/${id}`
+    }
 
     axios.get(url)
       .then((res) => {
-
         const normalized = normalizeProduct(res.data, source)
-
         setProduct(normalized)
-        setSelectedImg(normalized.images[0])
+        setSelectedImg(normalized.image)
         setLoading(false)
-
       })
       .catch((err) => {
-        console.error(err)
+        console.error("API ERROR:", err)
         setLoading(false)
       })
 
   }, [id, source])
 
-  const handleShare = () => {
-
-    navigator.clipboard.writeText(window.location.href)
-
-    setCopied(true)
-
-    setTimeout(() => setCopied(false), 2000)
-
+  const handleAddToCart = () => {
+    addToCart(product)
+    alert(`${product.title} added to cart ✅`)
   }
 
   if (loading) return <div>Loading...</div>
   if (!product) return <div>No product found</div>
 
   return (
-
     <div className="product-page">
 
       <InsaneFluidCursor />
       <Navbar />
 
       <div className="product-wrapper">
-
         <div className="product-content">
 
           <div className="product-left-col">
-
-            <div className="product-image-card">
-
-              {!imgError ? (
-
-                <img
-                  src={selectedImg}
-                  alt={product.title}
-                  className="product-image"
-                  onError={() => setImgError(true)}
-                />
-
-              ) : (
-
-                <div className="product-image-fallback">
-                  <span style={{ fontSize: '3rem' }}>🛍️</span>
-                  <p>No Image</p>
-                </div>
-
-              )}
-
-            </div>
-
-            {product.images?.length > 1 && (
-
-              <div className="image-selector">
-
-                {product.images.map((img, index) => (
-
-                  <button
-                    key={index}
-                    className={`image-thumb-btn ${selectedImg === img ? 'active' : ''}`}
-                    onClick={() => setSelectedImg(img)}
-                  >
-                    <img src={img} alt={`thumb-${index}`} />
-                  </button>
-
-                ))}
-
-              </div>
-
-            )}
-
-            <div className="product-actions-row">
-
-              <button
-                className={`action-btn ${wishlisted ? 'wishlisted' : ''}`}
-                onClick={() => setWishlisted(w => !w)}
-              >
-                {wishlisted ? '❤️' : '🤍'}
-              </button>
-
-              <button className="action-btn" onClick={handleShare}>
-                {copied ? '✅ Copied!' : '🔗 Share'}
-              </button>
-
-            </div>
-
+            <img src={selectedImg} alt={product.title} className="product-image" />
           </div>
 
           <div className="product-box">
-
             <h2>{product.title}</h2>
-
             <p>{product.description}</p>
-
             <p>Price: ${product.price}</p>
 
             <YourRating />
 
             <div className="btn-box">
-
-              <BuynowBtn product={product} quantity={quantity} />
-
-              <div onClick={handleAddToCart}>
-                <StatusButton product={product} quantity={quantity} />
-              </div>
-
+              <BuynowBtn product={product} />
+              <button onClick={handleAddToCart}>Add to Cart</button>
             </div>
 
           </div>
 
         </div>
-
       </div>
 
     </div>
-
   )
-
 }
 
 export default Product
